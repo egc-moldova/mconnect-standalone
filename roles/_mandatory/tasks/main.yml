@@ -1,0 +1,22 @@
+--- 
+#---------------------------------------------# 
+# MConnect - Centrul de Guvernare Electronică #
+#---------------------------------------------#
+
+- apt: name=ntp state=present
+
+- apt: name=ntpdate state=present
+
+- apt: name=unzip state=present
+
+- apt: name=tar state=present
+
+- apt: name=iptables state=present
+
+- apt: name=iptables-persistent state=present
+
+#
+# Create wso2 group
+- group: name={{ WSO2Group }} state=present
+# Create wso2 user
+- user: name={{ WSO2Owner }} shell=/bin/bash group={{ WSO2Group }} append=yes system=yes createhome=yes

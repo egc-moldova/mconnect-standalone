@@ -1,0 +1,10 @@
+# Global variables
+WSO2Owner: 'wso2'
+WSO2Group: 'wso2'
+WSO2CarbonTarget: '/usr/lib/'
+WSO2Folder: 'wso2/'
+
+WSO2SymLink: 'wso2{{ Alias }}'
+WSO2CarbonHome: '{{ WSO2CarbonTarget }}{{ WSO2Folder }}{{ WSO2SymLink }}'
+WSO2Service: 'wso2{{ Alias }}'
+#
