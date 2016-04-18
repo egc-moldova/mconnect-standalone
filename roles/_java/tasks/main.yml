@@ -1,6 +1,6 @@
 --- 
 #---------------------------------------------# 
-# MConnect - Centrul de Guvernare Electronica #
+# MConnect - Centrul de Guvernare Electronică #
 #---------------------------------------------#
 
 - name: Add apt-repository
@@ -8,6 +8,7 @@
     
 - name: Autoaccept license for Java
   debconf: name='oracle-java8-installer' question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
+#  action: shell echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
 
 - name: Update APT package cache
   action: apt update_cache=yes
