@@ -2,18 +2,19 @@
   - name: Install WSO2 DSS
     hosts: '{{ hosts | default("localhost") }}'
     user: root
-
+    vars:
+      Alias: 'dss'
+      DSSVersion: '3.5.0'
     roles:
-      - _dss
+      - dss
     tags:
       - dss
 
 # Install ESB
-  - name: Install WSO2 ESB
-    hosts: '{{ hosts | default("localhost") }}'
-    user: root
-
-    roles:
-      - _esb
-    tags:
-      - esb
+#  - name: Install WSO2 ESB
+#    hosts: '{{ hosts | default("localhost") }}'
+#    user: root
+#    roles:
+#      - _esb
+#    tags:
+#      - esb
