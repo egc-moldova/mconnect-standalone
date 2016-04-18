@@ -2,11 +2,6 @@
 #---------------------------------------------# 
 # MConnect - Centrul de Guvernare Electronica #
 #---------------------------------------------#
-
-  - name: Create directories
-    file: path=/usr/lib/wso2server/dss/ state=directory
-    file: path={{ WSO2FileRepository }} state=directory
-    file: path={{ WSO2CarbonHome }} state=directory
     
   # Clean previous installation, if any
   #
@@ -25,6 +20,14 @@
   - name: Remove startup service
     file: path=/etc/init.d/{{ WSO2Service }} state=absent force=yes
     ignore_errors: true
+    
+  # Clean previous installation, if any
+  # 
+  - name: Create directories
+    file: path=/usr/lib/wso2server/dss/ state=directory
+    file: path={{ WSO2FileRepository }} state=directory
+    file: path={{ WSO2CarbonHome }} state=directory
+    
   #
   # Installation
   #
