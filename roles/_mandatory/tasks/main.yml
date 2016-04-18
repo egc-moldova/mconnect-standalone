@@ -1,6 +1,6 @@
 --- 
 #---------------------------------------------# 
-# MConnect - Centrul de Guvernare Electronică #
+# MConnect - Centrul de Guvernare Electronica #
 #---------------------------------------------#
 
 - apt: name=ntp state=present
@@ -15,7 +15,6 @@
 
 - apt: name=iptables-persistent state=present
 
-#
 # Create wso2 group
 - group: name={{ WSO2Group }} state=present
 # Create wso2 user

@@ -1,4 +1,4 @@
-# Install dss
+# Install DSS
   - name: Install WSO2 DSS
     hosts: '{{ hosts | default("localhost") }}'
     user: root
@@ -8,7 +8,7 @@
     tags:
       - dss
 
-# Install esb
+# Install ESB
   - name: Install WSO2 ESB
     hosts: '{{ hosts | default("localhost") }}'
     user: root

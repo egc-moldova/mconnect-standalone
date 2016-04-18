@@ -1,4 +1,8 @@
----
+--- 
+#---------------------------------------------# 
+# MConnect - Centrul de Guvernare Electronica #
+#---------------------------------------------#
+
 - hosts: localhost
   user: root
 
