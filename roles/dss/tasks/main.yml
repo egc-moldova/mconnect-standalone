@@ -26,7 +26,7 @@
   - name: Create directories
     file: path=/usr/lib/wso2server/dss/ state=directory
     file: path={{ WSO2FileRepository }} state=directory
-    file: path={{ WSO2CarbonHome }} state=directory
+    file: path={{ WSO2ProductHome }} state=directory
     
   #
   # Installation
