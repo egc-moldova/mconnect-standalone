@@ -58,27 +58,17 @@
     when: driver == 'oracle' or driver == ''
     
   - name: Copy MySQL OJDBC driver
-    copy: src=mysql-connector-java-5.1.32-bin.jar dest={{ WSO2CarbonHome }}/repository/components/lib/  owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
+    copy: src=mysql-connector-java-5.1.38-bin.jar dest={{ WSO2CarbonHome }}/repository/components/lib/  owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
     when: driver == 'mysql' or driver == ''
     
-  - name: Copy Microsoft SQL OJDBC driver (2012)
-    copy: src=sqljdbc4.jar dest={{ WSO2CarbonHome }}/repository/components/lib/  owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
-    when: driver == 'mssql4' or driver == ''
-    
-  - name: Copy Microsoft SQL OJDBC driver (2014)
-    copy: src=sqljdbc41.jar dest={{ WSO2CarbonHome }}/repository/components/lib/  owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
-    when: driver == 'mssql41' or driver == ''
+  - name: Copy Microsoft SQL OJDBC driver
+    copy: src=sqljdbc42.jar dest={{ WSO2CarbonHome }}/repository/components/lib/  owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
+    when: driver == 'mssql' or driver == ''
   #
   # Configuration
   #
   - name: Change carbon file 
     template: src=conf/carbon.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/carbon.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
-
-  - name: Change axis2 file 
-    template: src=conf/axis2/axis2.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/axis2/axis2.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
-
-  - name: Change tenant axis2 file 
-    template: src=conf/axis2/tenant-axis2.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/axis2/tenant-axis2.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
   #
   # Ownership
   #
