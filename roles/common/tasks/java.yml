@@ -3,12 +3,15 @@
 # MConnect - Centrul de Guvernare Electronica #
 #---------------------------------------------#
 
-- name: Add apt-repository
+- name: Enable apt_repository module
+  apt: name=python-pycurl state=present
+
+- name: Add Java 8 apt-repository
   apt_repository: repo='ppa:webupd8team/java' state=present
     
 - name: Automatically accept Oracle license
 #  debconf: name=oracle-java8-installer question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
-  action: shell echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+  shell: echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
 
 - name: Install Java 8
   apt: name=oracle-java8-installer state=latest install_recommends=yes update_cache=yes
