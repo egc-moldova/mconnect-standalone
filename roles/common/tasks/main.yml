@@ -3,8 +3,10 @@
 # MConnect - Centrul de Guvernare Electronica #
 #---------------------------------------------#
 
+- apt: name=ntpdate state=present
+
 - apt: name=ntp state=present
 
-- apt: name=ntpdate state=present
+- service: name=ntp state=started enabled=yes
 
 - apt: name=unzip state=present
