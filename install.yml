@@ -5,8 +5,6 @@
     roles:
       - common
       - dss
-    tags:
-      - dss
     vars:
       patches: 
         - { "No" : "0012", "CarbonVersion" : "4.4.0" }
