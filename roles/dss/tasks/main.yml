@@ -34,8 +34,12 @@
   - name: Creates product directory
     file: path={{ WSO2ProductHome }} state=directory owner={{ WSO2Owner }} group={{ WSO2Group }} recurse=yes
     
+  - stat: path={{ WSO2FileRepository }}wso2dss-{{ DSSVersion }}.zip
+    register: dss_arhive
+    
   - name: Download DSS
     get_url: url=http://dist.wso2.org/products/data-services-server/{{ DSSVersion }}/wso2dss-{{ DSSVersion }}.zip dest={{ WSO2FileRepository }}
+    when: dss_arhive.stat.exists is not defined
     
   - name: Unzip DSS
     unarchive: src={{ WSO2FileRepository }}wso2dss-{{ DSSVersion }}.zip dest={{ WSO2ProductHome }} copy=no

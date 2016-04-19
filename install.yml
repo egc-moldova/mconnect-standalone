@@ -2,9 +2,6 @@
   - name: Install WSO2 DSS
     hosts: '{{ hosts | default("localhost") }}'
     user: root
-    vars:
-      Alias: 'dss'
-      DSSVersion: '3.5.0'
     roles:
       - dss
     tags:

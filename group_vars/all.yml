@@ -1,14 +1,14 @@
 # Global variables
-WSO2Owner: 'wso2'
-WSO2Group: 'wso2'
-WSO2CarbonTarget: '/usr/lib/'
-WSO2Folder: '{{ WSO2CarbonTarget }}wso2server/'
-WSO2FileRepository: '{{ WSO2Folder }}files/'
+WSO2Owner: "wso2"
+WSO2Group: "wso2"
+WSO2CarbonTarget: "/usr/lib/"
+WSO2Folder: "{{ WSO2CarbonTarget }}wso2server/"
+WSO2FileRepository: "{{ WSO2Folder }}files/"
 
-WSO2SymLink: 'wso2{{ Alias }}'
-WSO2CarbonHome: '{{ WSO2Folder }}{{ WSO2SymLink }}'
-WSO2ProductHome: '{{ WSO2Folder }}{{ Alias }}'
-WSO2Service: 'wso2{{ Alias }}'
+WSO2SymLink: "wso2{{ Alias }}"
+WSO2CarbonHome: "{{ WSO2Folder }}{{ WSO2SymLink }}"
+WSO2ProductHome: "{{ WSO2Folder }}{{ Alias }}"
+WSO2Service: "wso2{{ Alias }}"
 
 
 #

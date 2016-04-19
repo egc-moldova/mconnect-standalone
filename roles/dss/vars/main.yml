@@ -1,0 +1,6 @@
+### Server
+Offset: 0
+DomainName: "{{ ansible_eth0['ipv4']['address'] }}"
+
+### Certificate
+JksPassword: "myJKSpassword"
