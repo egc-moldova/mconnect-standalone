@@ -1,0 +1,10 @@
+--- 
+#---------------------------------------------# 
+# MConnect - Centrul de Guvernare Electronica #
+#---------------------------------------------#
+
+- apt: name=ntp state=present
+
+- apt: name=ntpdate state=present
+
+- apt: name=unzip state=present

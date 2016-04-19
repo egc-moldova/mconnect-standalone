@@ -1,0 +1,8 @@
+--- 
+#---------------------------------------------# 
+# MConnect - Centrul de Guvernare Electronica #
+#---------------------------------------------#
+
+- name: Install patches
+  copy: src=files/patches/WSO2-CARBON-PATCH-{{ item.CarbonVersion }}-{{ item.No }}/patch{{ item.No }} dest={{ WSO2CarbonHome }}/repository/components/patches/ owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
+  with_items: "{{ patches }}"

@@ -3,15 +3,13 @@
     hosts: '{{ hosts | default("localhost") }}'
     user: root
     roles:
+      - common
       - dss
     tags:
       - dss
-
-# Install ESB
-#  - name: Install WSO2 ESB
-#    hosts: '{{ hosts | default("localhost") }}'
-#    user: root
-#    roles:
-#      - _esb
-#    tags:
-#      - esb
+    vars:
+      patches: 
+        - { "No" : "0012", "CarbonVersion" : "4.4.0" }
+        - { "No" : "0016", "CarbonVersion" : "4.4.0" }
+        - { "No" : "0027", "CarbonVersion" : "4.4.0" }
+        - { "No" : "0042", "CarbonVersion" : "4.4.0" }

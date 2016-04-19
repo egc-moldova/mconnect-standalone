@@ -2,7 +2,7 @@
 #---------------------------------------------# 
 # MConnect - Centrul de Guvernare Electronica #
 #---------------------------------------------#
-    
+  #
   # Clean previous installation, if any
   #
   - name: Stop WSO2 resident services
@@ -20,18 +20,21 @@
   - name: Remove startup service
     file: path=/etc/init.d/{{ WSO2Service }} state=absent force=yes
     ignore_errors: true
-    
-  # Clean previous installation, if any
-  # 
+  #
+  # Install java
+  #
+  - include: ../../common/tasks/java.yml
+  #
+  # Create user
+  #
+  - include: ../../common/tasks/user.yml
+  #
+  # Install DSS
+  #
   - name: Create directories
     file: path=/usr/lib/wso2server/dss/ state=directory
     file: path={{ WSO2FileRepository }} state=directory
     file: path={{ WSO2ProductHome }} state=directory
-    
-  #
-  # Installation
-  #
-  - name: Creates product directory
     file: path={{ WSO2ProductHome }} state=directory owner={{ WSO2Owner }} group={{ WSO2Group }} recurse=yes
     
   - stat: path={{ WSO2FileRepository }}wso2dss-{{ WSO2ProductVersion }}.zip
@@ -42,7 +45,7 @@
     when: dss_arhive.stat.exists is not defined
     
   - name: Unzip DSS
-    unarchive: src={{ WSO2FileRepository }}wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2ProductHome }} copy=no
+    unarchive: src={{ WSO2FileRepository }}wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2ProductHome }}
     
   - name: Create symbolic link
     file: src={{ WSO2ProductHome }}/wso2dss-{{ WSO2ProductVersion }} dest={{ WSO2CarbonHome }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=link force=yes
@@ -70,13 +73,14 @@
   - name: Change carbon file 
     template: src=conf/carbon.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/carbon.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
   #
+  # Install patches
+  #
+  - include: ../../common/tasks/patch.yml
+  #
   # Ownership
   #
   - name: Change WSO2 installation directory ownership
     shell: chown -R {{ WSO2Owner }}:{{ WSO2Group }} {{ WSO2Folder }}
-    
-  - name: Change WSO2 symlink directory ownership
-    shell: chown {{ WSO2Owner }}:{{ WSO2Group }} {{ WSO2CarbonHome }}
   #
   # Firt startup
   #
@@ -92,12 +96,7 @@
   - name: Wait for WSO2 setup to completely stop
     wait_for: path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex=Halting
   #
-  # Restart
+  # Start service
   #
-  - name: Restart server
-    shell: reboot
-    
-  - name: Wait for server to come up
-    local_action: wait_for host={% if ansible_ssh_host is defined %}{{ ansible_ssh_host }}{% else %}{{ inventory_hostname }}{% endif %} port=22 delay=30
-    sudo: false
-  #
+  - name: Start service
+    service: name={{ WSO2Service }} state=started

@@ -1,0 +1,10 @@
+This security patch is licensed by WSO2 Inc. under Apache License 2.0. The license
+can be downloaded from the following locations:
+
+        http://www.apache.org/licenses/LICENSE-2.0.html
+        http://www.apache.org/licenses/LICENSE-2.0.txt
+
+Name                                                                            Type           License
+------------------------------------------------------------------------------------------------------
+commons-collections_3.2.0.wso2v1.jar                                            bundle         apache2
+

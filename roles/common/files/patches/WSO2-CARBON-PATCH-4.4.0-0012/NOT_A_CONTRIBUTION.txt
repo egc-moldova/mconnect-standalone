@@ -1,0 +1,1 @@
+Please note that this patch is not a contribution as defined in the Apache License, Version 2.0
