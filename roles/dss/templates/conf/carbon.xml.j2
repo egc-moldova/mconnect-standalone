@@ -358,11 +358,11 @@
             <!-- Keystore type (JKS/PKCS12 etc.)-->
             <Type>JKS</Type>
             <!-- Keystore password-->
-            <Password>wso2carbon</Password>
+            <Password>{{ KeyStorePassword }}</Password>
             <!-- Private Key alias-->
-            <KeyAlias>wso2carbon</KeyAlias>
+            <KeyAlias>{{ KeyStoreKeyAlias }}</KeyAlias>
             <!-- Private Key password-->
-            <KeyPassword>wso2carbon</KeyPassword>
+            <KeyPassword>{{ KeyStoreKeyPassword }}</KeyPassword>
         </KeyStore>
 
         <!--
@@ -375,7 +375,7 @@
             <!-- trust-store type (JKS/PKCS12 etc.) -->
             <Type>JKS</Type>
             <!-- trust-store password -->
-            <Password>wso2carbon</Password>
+            <Password>{{ TrustStorePassword }}</Password>
         </TrustStore>
 
         <!--

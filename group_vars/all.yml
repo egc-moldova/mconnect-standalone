@@ -7,10 +7,10 @@ WSO2FileRepository: "{{ WSO2Folder }}files/"
 
 WSO2SymLink: "wso2{{ Alias }}"
 WSO2CarbonHome: "{{ WSO2Folder }}{{ WSO2SymLink }}"
-WSO2ProductHome: "{{ WSO2Folder }}{{ Alias }}"
-WSO2Service: "wso2{{ Alias }}"
+WSO2ProductHome: "{{ WSO2Folder }}{{ WSO2ProductAlias }}"
+WSO2Service: "wso2{{ WSO2ProductAlias }}"
 
-
-#
-
-
+KeyStorePassword: "wso2carbon"
+KeyStoreKeyAlias: "wso2carbon"
+KeyStoreKeyPassword: "wso2carbon"
+TrustStorePassword: "wso2carbon"

@@ -34,18 +34,18 @@
   - name: Creates product directory
     file: path={{ WSO2ProductHome }} state=directory owner={{ WSO2Owner }} group={{ WSO2Group }} recurse=yes
     
-  - stat: path={{ WSO2FileRepository }}wso2dss-{{ DSSVersion }}.zip
+  - stat: path={{ WSO2FileRepository }}wso2dss-{{ WSO2ProductVersion }}.zip
     register: dss_arhive
     
   - name: Download DSS
-    get_url: url=http://dist.wso2.org/products/data-services-server/{{ DSSVersion }}/wso2dss-{{ DSSVersion }}.zip dest={{ WSO2FileRepository }}
+    get_url: url=http://dist.wso2.org/products/data-services-server/{{ WSO2ProductVersion }}/wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2FileRepository }}
     when: dss_arhive.stat.exists is not defined
     
   - name: Unzip DSS
-    unarchive: src={{ WSO2FileRepository }}wso2dss-{{ DSSVersion }}.zip dest={{ WSO2ProductHome }} copy=no
+    unarchive: src={{ WSO2FileRepository }}wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2ProductHome }} copy=no
     
   - name: Create symbolic link
-    file: src={{ WSO2ProductHome }}/wso2dss-{{ DSSVersion }} dest={{ WSO2CarbonHome }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=link force=yes
+    file: src={{ WSO2ProductHome }}/wso2dss-{{ WSO2ProductVersion }} dest={{ WSO2CarbonHome }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=link force=yes
     
   - name: Create startup service
     template: src=services/wso2server.j2 dest=/etc/init.d/{{ WSO2Service }} owner=root group=root mode=0755
