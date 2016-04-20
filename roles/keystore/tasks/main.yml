@@ -8,3 +8,5 @@
   
 - name: Import certificate into wso2 keystore
   command: 'keytool -import -alias "{{ HostName }}"  -file "{{ WSO2FileRepository }}{{ CertificateKeyName }}.crt" -keystore "{{ WSO2CarbonHome }}/repository/resources/security/client-truststore.jks"'
+  with_items:
+    - dss

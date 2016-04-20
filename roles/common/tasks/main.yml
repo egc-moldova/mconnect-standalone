@@ -12,3 +12,14 @@
 - apt: name=openssl state=present
 
 - apt: name=unzip state=present
+
+# WSO2 Specific
+
+- name: Create service group
+  group: name={{ WSO2Group }} state=present
+
+- name: Create service user
+  user: name={{ WSO2Owner }} state=present shell=/bin/bash group={{ WSO2Group }} system=yes
+  
+- name: Create directories
+  file: path={{ WSO2FileRepository }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=directory

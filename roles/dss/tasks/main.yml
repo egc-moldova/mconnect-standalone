@@ -31,15 +31,11 @@
 
 # Install product
 
-- name: Create directories
-  file: path={{ item }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=directory
-  with_items:
-    - "{{ WSO2Folder }}"
-    - "{{ WSO2FileRepository }}"
-    - "{{ WSO2ProductHome }}"
-    
+- name: Create product directory
+  file: path={{ WSO2ProductHome }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=directory
+
 - name: Download product
-  get_url: url=http://dist.wso2.org/products/{{ WSO2ProductUrlName }}/{{ WSO2ProductVersion }}/wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2FileRepository }}
+  get_url: url=http://dist.wso2.org/products/{{ WSO2ProductUrlName }}/{{ WSO2ProductVersion }}/wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2FileRepository }} force=no
     
 - name: Unzip product
   unarchive: src={{ WSO2FileRepository }}wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2ProductHome }} copy=yes
@@ -55,15 +51,15 @@
   
 - name: Copy Oracle Server OJDBC driver
   copy: src=ojdbc7.jar dest={{ WSO2CarbonHome }}/repository/components/lib/  owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
-  when: driver == 'oracle' or driver == ''
+  when: driver is undefined or driver == 'oracle'
     
 - name: Copy MySQL OJDBC driver
   copy: src=mysql-connector-java-5.1.38-bin.jar dest={{ WSO2CarbonHome }}/repository/components/lib/  owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
-  when: driver == 'mysql' or driver == ''
+  when: driver is undefined or driver == 'mysql'
     
 - name: Copy Microsoft SQL OJDBC driver
   copy: src=sqljdbc42.jar dest={{ WSO2CarbonHome }}/repository/components/lib/  owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
-  when: driver == 'mssql' or driver == ''
+  when: driver is undefined or driver == 'mssql'
 
 # Configure product
 
@@ -77,7 +73,7 @@
 # Fix file ownership
 
 - name: Change WSO2 installation directory ownership
-  shell: chown -R {{ WSO2Owner }}:{{ WSO2Group }} {{ WSO2Folder }}
+  file: path={{ WSO2Folder }} owner={{ WSO2Owner }} group={{ WSO2Group }}
 
 # Run product for setup
 
