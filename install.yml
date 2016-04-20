@@ -4,6 +4,7 @@
     user: root
     roles:
       - common
+      - java
       - dss
     vars:
       patches: 
