@@ -5,7 +5,7 @@
 
 # Clean previous installation, if any
 
-- name: Stop WSO2 resident services
+- name: Stop any resident services
   shell: ps -ef | grep -iv grep | grep {{ WSO2Owner }} | awk '{ print $2 }' | sudo xargs kill -9
   ignore_errors: true
     
@@ -40,7 +40,7 @@
   get_url: url=http://dist.wso2.org/products/{{ WSO2ProductUrlName }}/{{ WSO2ProductVersion }}/wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2FileRepository }}
     
 - name: Unzip product
-  unarchive: src={{ WSO2FileRepository }}wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2ProductHome }}
+  unarchive: src={{ WSO2FileRepository }}wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2ProductHome }} copy=yes
     
 - name: Create symbolic link
   file: src={{ WSO2VersionHome }} dest={{ WSO2CarbonHome }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=link force=yes
