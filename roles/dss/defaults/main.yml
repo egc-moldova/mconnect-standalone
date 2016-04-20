@@ -1,2 +1,4 @@
 WSO2ProductAlias: "dss"
+WSO2ProductCode: "DSS"
+WSO2ProductUrlName: "data-services-server"
 WSO2ProductVersion: "3.5.0"

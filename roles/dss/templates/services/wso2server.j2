@@ -22,13 +22,12 @@
 # This service script will be executed to start the servers.
 # --------------------------------------------------------------
 #
-USER="{{ WSO2Owner }}"
-PRODUCT_CODE="DSS"                              #eg: CEP
-CARBON_HOME="{{ WSO2CarbonHome }}"              #eg: /mnt/10.0.0.1/wso2esb-4.9.0
+USER="{{ WSO2Owner }}"				#eg: wso2
+PRODUCT_CODE="{{ WSO2ProductCode }}"            #eg: DSS
+CARBON_HOME="{{ WSO2CarbonHome }}"              #eg: /usr/lib/wso2server/dss/wso2dss
 LOCK_FILE="${CARBON_HOME}/wso2carbon.lck"
 PID_FILE="${CARBON_HOME}/wso2carbon.pid"
-CMD="${CARBON_HOME}/bin/wso2server.sh"          #eg: ${CARBON_HOME}/bin/wso2server.sh
-#JAVA_HOME="{{ JAVA_HOME }}"                    #eg: /usr/java/default
+CMD="${CARBON_HOME}/bin/wso2server.sh"
 
 export JAVA_HOME=$JAVA_HOME
 

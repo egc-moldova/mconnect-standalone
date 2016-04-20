@@ -2,93 +2,96 @@
 #---------------------------------------------# 
 # MConnect - Centrul de Guvernare Electronica #
 #---------------------------------------------#
-  #
-  # Clean previous installation, if any
-  #
-  - name: Stop WSO2 resident services
-    shell: ps -ef | grep -iv grep | grep {{ WSO2Owner }} | awk '{ print $2 }' | sudo xargs kill -9
-    ignore_errors: true
+
+# Clean previous installation, if any
+
+- name: Stop WSO2 resident services
+  shell: ps -ef | grep -iv grep | grep {{ WSO2Owner }} | awk '{ print $2 }' | sudo xargs kill -9
+  ignore_errors: true
     
-  - name: Remove product folder
-    file: path={{ WSO2ProductHome }} state=absent force=yes
-    ignore_errors: true
+- name: Remove product folder
+  file: path={{ WSO2VersionHome }} state=absent force=yes
+  ignore_errors: true
     
-  - name: Remove symlink
-    file: path={{ WSO2CarbonHome }} state=absent force=yes
-    ignore_errors: true
+- name: Remove symlink
+  file: path={{ WSO2CarbonHome }} state=absent force=yes
+  ignore_errors: true
+
+- name: Ensure WSO2 service is disabled for startup
+  service: name={{ WSO2Service }} enabled=no
+  ignore_errors: true
     
-  - name: Remove startup service
-    file: path=/etc/init.d/{{ WSO2Service }} state=absent force=yes
-    ignore_errors: true
-  #
-  # Create user
-  #
-  - include: ../../common/tasks/user.yml
-  #
-  # Install DSS
-  #
-  - name: Create directories
-    file: path=/usr/lib/wso2server/dss/ state=directory
-    file: path={{ WSO2FileRepository }} state=directory
-    file: path={{ WSO2ProductHome }} state=directory
-    file: path={{ WSO2ProductHome }} state=directory owner={{ WSO2Owner }} group={{ WSO2Group }} recurse=yes
+- name: Remove startup service
+  file: path=/etc/init.d/{{ WSO2Service }} state=absent force=yes
+  ignore_errors: true
+  
+# Create user
+
+- include: ../../common/tasks/user.yml
+
+# Install product
+
+- name: Create directories
+  file: path={{ WSO2Folder }} state=directory owner={{ WSO2Owner }} group={{ WSO2Group }}
+  file: path={{ WSO2FileRepository }} state=directory owner={{ WSO2Owner }} group={{ WSO2Group }}
+  file: path={{ WSO2ProductHome }} state=directory owner={{ WSO2Owner }} group={{ WSO2Group }}
     
-  - name: Download DSS
-    get_url: url=http://dist.wso2.org/products/data-services-server/{{ WSO2ProductVersion }}/wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2FileRepository }}
+- name: Download {{ WSO2ProductCode }}
+  get_url: url=http://dist.wso2.org/products/{{ WSO2ProductUrlName }}/{{ WSO2ProductVersion }}/wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2FileRepository }}
     
-  - name: Unzip DSS
-    unarchive: src={{ WSO2FileRepository }}wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2ProductHome }}
+- name: Unzip {{ WSO2ProductCode }}
+  unarchive: src={{ WSO2FileRepository }}wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2ProductHome }}
     
-  - name: Create symbolic link
-    file: src={{ WSO2ProductHome }}/wso2dss-{{ WSO2ProductVersion }} dest={{ WSO2CarbonHome }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=link force=yes
+- name: Create symbolic link
+  file: src={{ WSO2VersionHome }} dest={{ WSO2CarbonHome }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=link force=yes
+   
+- name: Create startup service
+  template: src=services/wso2server.j2 dest=/etc/init.d/{{ WSO2Service }} owner=root group=root mode=0755
     
-  - name: Create startup service
-    template: src=services/wso2server.j2 dest=/etc/init.d/{{ WSO2Service }} owner=root group=root mode=0755
+- name: Ensure WSO2 service is enabled for startup
+  service: name={{ WSO2Service }} enabled=yes
+  
+- name: Copy Oracle Server OJDBC driver
+  copy: src=ojdbc7.jar dest={{ WSO2CarbonHome }}/repository/components/lib/  owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
+  when: driver == 'oracle' or driver == ''
     
-  - name: Ensure WSO2 service is enabled for startup
-    service: name={{ WSO2Service }} enabled=yes
+- name: Copy MySQL OJDBC driver
+  copy: src=mysql-connector-java-5.1.38-bin.jar dest={{ WSO2CarbonHome }}/repository/components/lib/  owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
+  when: driver == 'mysql' or driver == ''
     
-  - name: Copy Oracle Server OJDBC driver
-    copy: src=ojdbc7.jar dest={{ WSO2CarbonHome }}/repository/components/lib/  owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
-    when: driver == 'oracle' or driver == ''
+- name: Copy Microsoft SQL OJDBC driver
+  copy: src=sqljdbc42.jar dest={{ WSO2CarbonHome }}/repository/components/lib/  owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
+  when: driver == 'mssql' or driver == ''
+
+# Configure product
+
+- name: Change carbon file 
+  template: src=conf/carbon.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/carbon.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+# Install product patches
+ 
+- include: ../../common/tasks/patch.yml
+
+# Fix file ownership
+
+- name: Change WSO2 installation directory ownership
+  shell: chown -R {{ WSO2Owner }}:{{ WSO2Group }} {{ WSO2Folder }}
+
+# Run product for setup
+
+- name: Start WSO2 instance first time with -Dsetup
+  command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/ && bin/wso2server.sh --start -Dsetup'"
     
-  - name: Copy MySQL OJDBC driver
-    copy: src=mysql-connector-java-5.1.38-bin.jar dest={{ WSO2CarbonHome }}/repository/components/lib/  owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
-    when: driver == 'mysql' or driver == ''
+- name: Wait for WSO2 to start for the first time
+  wait_for: path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex=org.wso2.carbon.ui.internal.CarbonUIServiceComponent
     
-  - name: Copy Microsoft SQL OJDBC driver
-    copy: src=sqljdbc42.jar dest={{ WSO2CarbonHome }}/repository/components/lib/  owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
-    when: driver == 'mssql' or driver == ''
-  #
-  # Configuration
-  #
-  - name: Change carbon file 
-    template: src=conf/carbon.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/carbon.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
-  #
-  # Install patches
-  #
-  - include: ../../common/tasks/patch.yml
-  #
-  # Ownership
-  #
-  - name: Change WSO2 installation directory ownership
-    shell: chown -R {{ WSO2Owner }}:{{ WSO2Group }} {{ WSO2Folder }}
-  #
-  # Firt startup
-  #
-  - name: Start WSO2 instance first time with -Dsetup
-    command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/ && bin/wso2server.sh --start -Dsetup'"
+- name: Stop WSO2 setup
+  command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/ && bin/wso2server.sh --stop'"
     
-  - name: Wait for WSO2 to start for the first time
-    wait_for: path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex=org.wso2.carbon.ui.internal.CarbonUIServiceComponent
-    
-  - name: Stop WSO2 setup
-    command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/ && bin/wso2server.sh --stop'"
-    
-  - name: Wait for WSO2 setup to completely stop
-    wait_for: path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex=Halting
-  #
-  # Start service
-  #
-  - name: Start service
-    service: name={{ WSO2Service }} state=started
+- name: Wait for WSO2 setup to completely stop
+  wait_for: path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex=Halting
+
+# Start product as a service
+
+- name: Start service
+  service: name={{ WSO2Service }} state=started
