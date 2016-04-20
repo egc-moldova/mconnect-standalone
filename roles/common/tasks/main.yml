@@ -9,4 +9,6 @@
 
 - service: name=ntp state=started enabled=yes
 
+- apt: name=openssl state=present
+
 - apt: name=unzip state=present

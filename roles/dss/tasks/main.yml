@@ -32,9 +32,11 @@
 # Install product
 
 - name: Create directories
-  file: path={{ WSO2Folder }} state=directory owner={{ WSO2Owner }} group={{ WSO2Group }}
-  file: path={{ WSO2FileRepository }} state=directory owner={{ WSO2Owner }} group={{ WSO2Group }}
-  file: path={{ WSO2ProductHome }} state=directory owner={{ WSO2Owner }} group={{ WSO2Group }}
+  file: path={{ item }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=directory
+  with_items:
+    - "{{ WSO2Folder }}"
+    - "{{ WSO2FileRepository }}"
+    - "{{ WSO2ProductHome }}"
     
 - name: Download product
   get_url: url=http://dist.wso2.org/products/{{ WSO2ProductUrlName }}/{{ WSO2ProductVersion }}/wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2FileRepository }}

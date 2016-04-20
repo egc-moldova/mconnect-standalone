@@ -12,7 +12,7 @@ WSO2CarbonTarget: "/usr/lib/"
 WSO2Folder: "{{ WSO2CarbonTarget }}wso2server/"
 WSO2FileRepository: "{{ WSO2Folder }}files/"
 
-WSO2ProductHome: "{{ WSO2Folder }}{{ WSO2ProductAlias }}"
+WSO2ProductHome: "{{ WSO2Folder }}{{ WSO2ProductAlias }}/"
 WSO2CarbonHome: "{{ WSO2ProductHome }}wso2{{ WSO2ProductAlias }}"
 WSO2VersionHome: "{{ WSO2ProductHome }}/wso2{{ WSO2ProductAlias }}-{{ WSO2ProductVersion }}"
 WSO2Service: "wso2{{ WSO2ProductAlias }}"
