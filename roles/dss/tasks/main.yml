@@ -17,7 +17,7 @@
   file: path={{ WSO2CarbonHome }} state=absent force=yes
   ignore_errors: true
 
-- name: Ensure WSO2 service is disabled for startup
+- name: Disable service automatic startup
   service: name={{ WSO2Service }} enabled=no
   ignore_errors: true
     
@@ -36,10 +36,10 @@
   file: path={{ WSO2FileRepository }} state=directory owner={{ WSO2Owner }} group={{ WSO2Group }}
   file: path={{ WSO2ProductHome }} state=directory owner={{ WSO2Owner }} group={{ WSO2Group }}
     
-- name: Download {{ WSO2ProductCode }}
+- name: Download product
   get_url: url=http://dist.wso2.org/products/{{ WSO2ProductUrlName }}/{{ WSO2ProductVersion }}/wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2FileRepository }}
     
-- name: Unzip {{ WSO2ProductCode }}
+- name: Unzip product
   unarchive: src={{ WSO2FileRepository }}wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2ProductHome }}
     
 - name: Create symbolic link
@@ -48,7 +48,7 @@
 - name: Create startup service
   template: src=services/wso2server.j2 dest=/etc/init.d/{{ WSO2Service }} owner=root group=root mode=0755
     
-- name: Ensure WSO2 service is enabled for startup
+- name: Ensure service is enabled for startup
   service: name={{ WSO2Service }} enabled=yes
   
 - name: Copy Oracle Server OJDBC driver
