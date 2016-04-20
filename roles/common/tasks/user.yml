@@ -3,7 +3,8 @@
 # MConnect - Centrul de Guvernare Electronica #
 #---------------------------------------------#
 
-# Ensure group exists
-- group: name={{ WSO2Group }} state=present
-# Ensure user exists
-- user: name={{ WSO2Owner }} state=present shell=/bin/bash group={{ WSO2Group }} system=yes
+- name: Create service group
+  group: name={{ WSO2Group }} state=present
+
+- name: Create service user
+  user: name={{ WSO2Owner }} state=present shell=/bin/bash group={{ WSO2Group }} system=yes

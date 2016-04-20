@@ -1,4 +1,11 @@
-# Global variables
+--- 
+#---------------------------------------------# 
+# MConnect - Centrul de Guvernare Electronica #
+#---------------------------------------------#
+
+Offset: 0
+HostName: "{{ ansible_eth0['ipv4']['address'] }}"
+
 WSO2Owner: "wso2"
 WSO2Group: "wso2"
 WSO2CarbonTarget: "/usr/lib/"
