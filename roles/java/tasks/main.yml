@@ -17,3 +17,6 @@
       
 - name: Set Java 8 environment
   apt: name=oracle-java8-set-default state=latest install_recommends=yes
+
+- name: Source JAVA_HOME
+  shell: source /etc/profile.d/jdk.sh
