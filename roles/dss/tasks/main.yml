@@ -75,6 +75,11 @@
 - name: Change WSO2 installation directory ownership
   file: path={{ WSO2Folder }} owner={{ WSO2Owner }} group={{ WSO2Group }}
 
+# Import certificate into wso2 keystore
+
+- name: Import certificate into wso2 keystore
+  command: 'keytool -import -alias "{{ HostName }}"  -file "{{ WSO2FileRepository }}{{ HostName }}.crt" -keystore "{{ WSO2CarbonHome }}/repository/resources/security/client-truststore.jks"'
+
 # Run product for setup
 
 - name: Start WSO2 instance first time with -Dsetup
