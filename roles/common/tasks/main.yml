@@ -3,15 +3,20 @@
 # MConnect - Centrul de Guvernare Electronica #
 #---------------------------------------------#
 
-- apt: name=ntpdate state=present
+- name: Ensure ntpdate is installed
+  apt: name=ntpdate state=present
 
-- apt: name=ntp state=present
+- name: Ensure ntp is installed
+  apt: name=ntp state=present
 
-- service: name=ntp state=started enabled=yes
+- name: Ensure ntp is started
+  service: name=ntp state=started enabled=yes
 
-- apt: name=openssl state=present
+- name: Ensure openssl is installed
+  apt: name=openssl state=present
 
-- apt: name=unzip state=present
+- name: Ensure unzip is installed
+  apt: name=unzip state=present
 
 # WSO2 Specific
 

@@ -7,7 +7,7 @@
   command: 'openssl req -x509 -nodes -newkey rsa:2048 -subj "/C=MD/L=Chisinau/O=EGC/CN={{ HostName }}" -days 73000 -keyout "{{ WSO2FileRepository }}{{ HostName }}.key" -out "{{ WSO2FileRepository }}{{ HostName }}.crt"'
 
 - name: Convert to PKCS12 certificate
-  command: 'openssl pkcs12 -export -in "{{ WSO2FileRepository }}{{ HostName }}.crt" -inkey "{{ WSO2FileRepository }}{{ HostName }}.key" -out "{{ WSO2FileRepository }}{{ HostName }}.p12" -passout "pass:{{ KeyStorePassword }}" -name "{{ KeyStoreKeyAlias }}"'
+  command: 'openssl pkcs12 -export -in "{{ WSO2FileRepository }}{{ HostName }}.crt" -inkey "{{ WSO2FileRepository }}{{ HostName }}.key" -out "{{ WSO2FileRepository }}{{ HostName }}.p12" -passout "pass:{{ KeyStorePassword }}" -name "{{ HostName }}"'
 
 - name: Convert PKCS12 to JKS
   command: 'keytool -importkeystore -deststorepass "{{ KeyStorePassword }}" -destkeypass "{{ KeyStoreKeyPassword }}" -destkeystore "{{ WSO2FileRepository }}wso2carbon.jks" -srckeystore "{{ WSO2FileRepository }}{{ HostName }}.p12" -srcstoretype PKCS12 -srcstorepass "{{ KeyStorePassword }}" -alias "{{ KeyStoreKeyAlias }}"'
