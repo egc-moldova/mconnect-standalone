@@ -3,20 +3,16 @@
 # MConnect - Centrul de Guvernare Electronica #
 #---------------------------------------------#
 
-- name: Ensure ntpdate is installed
-  apt: name=ntpdate state=present
-
-- name: Ensure ntp is installed
-  apt: name=ntp state=present
+- name: Ensure required packages are installed
+  apt: name="{{ item }}" state=present
+  with_items:
+    - ntpdate
+    - ntp
+    - openssl
+    - unzip
 
 - name: Ensure ntp is started
   service: name=ntp state=started enabled=yes
-
-- name: Ensure openssl is installed
-  apt: name=openssl state=present
-
-- name: Ensure unzip is installed
-  apt: name=unzip state=present
 
 # WSO2 Specific
 
@@ -26,5 +22,5 @@
 - name: Create service user
   user: name={{ WSO2Owner }} state=present shell=/bin/bash group={{ WSO2Group }} system=yes
   
-- name: Create directories
+- name: Create file repository
   file: path={{ WSO2FileRepository }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=directory

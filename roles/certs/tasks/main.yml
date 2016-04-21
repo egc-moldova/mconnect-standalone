@@ -10,4 +10,4 @@
   command: 'openssl pkcs12 -export -in "{{ WSO2FileRepository }}{{ HostName }}.crt" -inkey "{{ WSO2FileRepository }}{{ HostName }}.key" -out "{{ WSO2FileRepository }}{{ HostName }}.p12" -passout "pass:{{ KeyStorePassword }}" -name "{{ HostName }}"'
 
 - name: Convert PKCS12 to JKS
-  command: 'keytool -importkeystore -deststorepass "{{ KeyStorePassword }}" -destkeypass "{{ KeyStoreKeyPassword }}" -destkeystore "{{ WSO2FileRepository }}wso2carbon.jks" -srckeystore "{{ WSO2FileRepository }}{{ HostName }}.p12" -srcstoretype PKCS12 -srcstorepass "{{ KeyStorePassword }}" -alias "{{ KeyStoreKeyAlias }}"'
+  command: 'keytool -importkeystore -srckeystore "{{ WSO2FileRepository }}{{ HostName }}.p12" -srcstoretype PKCS12 -srcstorepass "{{ KeyStorePassword }}" -destkeystore "{{ WSO2FileRepository }}wso2carbon.jks" -deststorepass "{{ KeyStorePassword }}" -destkeypass "{{ KeyStoreKeyPassword }}" -alias "{{ KeyStoreKeyAlias }}"'
