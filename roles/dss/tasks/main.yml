@@ -82,17 +82,17 @@
 
 # Run product for setup
 
-- name: Start WSO2 instance first time with -Dsetup
-  command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/ && bin/wso2server.sh --start -Dsetup'"
+#- name: Start WSO2 instance first time with -Dsetup
+#  command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/ && bin/wso2server.sh --start -Dsetup'"
     
-- name: Wait for WSO2 to start for the first time
-  wait_for: path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex=org.wso2.carbon.ui.internal.CarbonUIServiceComponent
+#- name: Wait for WSO2 to start for the first time
+#  wait_for: path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex=org.wso2.carbon.ui.internal.CarbonUIServiceComponent
     
-- name: Stop WSO2 setup
-  command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/ && bin/wso2server.sh --stop'"
+#- name: Stop WSO2 setup
+#  command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/ && bin/wso2server.sh --stop'"
     
-- name: Wait for WSO2 setup to completely stop
-  wait_for: path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex=Halting
+#- name: Wait for WSO2 setup to completely stop
+#  wait_for: path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex=Halting
 
 # Start product as a service
 
