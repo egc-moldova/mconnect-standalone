@@ -32,7 +32,7 @@
   file: path={{ WSO2ProductHome }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=directory
 
 - name: Download product
-  get_url: url=http://dist.wso2.org/products/{{ WSO2ProductUrlName }}/{{ WSO2ProductVersion }}/wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2FileRepository }} force=no
+  get_url: url=http://dist.wso2.org/products/{{ WSO2ProductUrlName }}/{{ WSO2ProductVersion }}/wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2FileRepository }}
     
 - name: Unzip product
   unarchive: src={{ WSO2FileRepository }}wso2dss-{{ WSO2ProductVersion }}.zip dest={{ WSO2ProductHome }} copy=yes
@@ -61,38 +61,45 @@
 # Configure product
 
 - name: Configure carbon
-  template: src=conf/carbon.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/carbon.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+  template: src=conf/carbon.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/carbon.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
 
 - name: Configure tomcat catalina server
-  template: src=conf/tomcat/catalina-server.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/tomcat/catalina-server.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+  template: src=conf/tomcat/catalina-server.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/tomcat/catalina-server.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
 
 # Install product patches
  
 - include: ../../common/tasks/patch.yml
+
+# Configure certificates
+
+- name: Apply our keystore
+  copy: src={{ WSO2FileRepository }}wso2carbon.jks dest={{ WSO2CarbonHome }}/repository/resources/security/ owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
+
+- name: Import certificate into client truststores
+  command: 'keytool -import -alias "{{ HostName }}"  -file "{{ WSO2FileRepository }}{{ HostName }}.crt" -keystore "{{ WSO2CarbonHome }}/repository/resources/security/client-truststore.jks"'
 
 # Fix file ownership
 
 - name: Change WSO2 installation directory ownership
   file: path={{ WSO2Folder }} owner={{ WSO2Owner }} group={{ WSO2Group }} recurse=yes
 
-# Import certificate into wso2 keystore
-
-- name: Import certificate into wso2 keystore
-  command: 'keytool -import -alias "{{ HostName }}"  -file "{{ WSO2FileRepository }}{{ HostName }}.crt" -keystore "{{ WSO2CarbonHome }}/repository/resources/security/client-truststore.jks"'
-
 # Run product for setup
 
-#- name: Start WSO2 instance first time with -Dsetup
+- name: Start WSO2 instance first time with -Dsetup
+  service: name={{ WSO2Service }} state=started
+  environment:
+    JAVA_OPTS: "-Dsetup"
 #  command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/ && bin/wso2server.sh --start -Dsetup'"
     
-#- name: Wait for WSO2 to start for the first time
-#  wait_for: path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex=org.wso2.carbon.ui.internal.CarbonUIServiceComponent
+- name: Wait for WSO2 to start for the first time
+  wait_for: path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex=org.wso2.carbon.ui.internal.CarbonUIServiceComponent
     
-#- name: Stop WSO2 setup
+- name: Stop WSO2 setup
+  service: name={{ WSO2Service }} state=stopped
 #  command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/ && bin/wso2server.sh --stop'"
     
-#- name: Wait for WSO2 setup to completely stop
-#  wait_for: path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex=Halting
+- name: Wait for WSO2 setup to completely stop
+  wait_for: path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex=Halting
 
 # Start product as a service
 
