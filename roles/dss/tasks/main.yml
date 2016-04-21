@@ -63,8 +63,11 @@
 
 # Configure product
 
-- name: Change carbon file 
+- name: Configure carbon
   template: src=conf/carbon.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/carbon.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
+
+- name: Configure tomcat catalina server
+  template: src=conf/tomcat/catalina-server.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/tomcat/catalina-server.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0777
 
 # Install product patches
  
