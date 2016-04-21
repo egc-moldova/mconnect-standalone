@@ -3,5 +3,10 @@
 # MConnect - Centrul de Guvernare Electronica #
 #---------------------------------------------#
 
-- name: Generate certificate
-  command: 'openssl req -new -nodes -x509 -subj /C=MD/ST=Chisinau/L=Chisinau/O=EGC/CN={{ HostName }} -days 73000 -keyout {{ WSO2FileRepository }}{{ HostName }}.key -out {{ WSO2FileRepository }}{{ HostName }}.crt -extensions v3_ca creates={{ WSO2FileRepository }}{{ HostName }}.crt'
+- name: Install WSO2 DSS
+  hosts: '{{ hosts | default("DSS") }}'
+  user: root
+  roles:
+    - common
+    - java
+    - certs

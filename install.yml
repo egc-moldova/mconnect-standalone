@@ -4,7 +4,7 @@
 #---------------------------------------------#
 
 - name: Install WSO2 DSS
-  hosts: '{{ hosts | default("127.0.0.1") }}'
+  hosts: '{{ hosts | default("DSS") }}'
   user: root
   roles:
     - common
