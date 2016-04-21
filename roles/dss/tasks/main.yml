@@ -17,17 +17,13 @@
   file: path={{ WSO2CarbonHome }} state=absent force=yes
   ignore_errors: yes
 
-- name: Disable service automatic startup
-  service: name={{ WSO2Service }} enabled=no
-  ignore_errors: yes
+#- name: Disable service automatic startup
+#  service: name={{ WSO2Service }} enabled=no
+#  ignore_errors: yes
     
 - name: Remove startup service
   file: path=/etc/init.d/{{ WSO2Service }} state=absent force=yes
   ignore_errors: yes
-  
-# Create user
-
-- include: ../../common/tasks/user.yml
 
 # Install product
 
