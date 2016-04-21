@@ -1,9 +1,9 @@
 # install ansible
 
-apt-get install software-properties-common -y
-apt-add-repository ppa:ansible/ansible -y
+apt-get -y install software-properties-common -y
+apt-add-repository -y 'ppa:ansible/ansible'
 apt-get update
-apt-get install ansible -y
+apt-get -y install ansible
 
 # run installation script
 
