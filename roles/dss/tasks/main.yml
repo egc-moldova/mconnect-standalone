@@ -17,6 +17,7 @@
   file: path={{ WSO2CarbonHome }} state=absent force=yes
   ignore_errors: yes
 
+# TODO: This fails when no service is present
 #- name: Disable service automatic startup
 #  service: name={{ WSO2Service }} enabled=no
 #  ignore_errors: yes
@@ -72,7 +73,7 @@
 # Fix file ownership
 
 - name: Change WSO2 installation directory ownership
-  file: path={{ WSO2Folder }} owner={{ WSO2Owner }} group={{ WSO2Group }}
+  file: path={{ WSO2Folder }} owner={{ WSO2Owner }} group={{ WSO2Group }} recurse=yes
 
 # Import certificate into wso2 keystore
 

@@ -13,15 +13,15 @@
   debconf: name=oracle-java8-installer question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
 
 - name: Install Java 8
-  apt: name=oracle-java8-installer state=latest install_recommends=yes update_cache=yes
-  register: java
+  apt: name=oracle-java8-installer state=latest update_cache=yes
+# register: java_install
       
 - name: Set Java 8 environment
-  apt: name=oracle-java8-set-default state=latest install_recommends=yes
-  register: java_env
+  apt: name=oracle-java8-set-default state=latest
+# register: java_env
 
-- name: Source JAVA_HOME
+- name: Export Java environment
   shell: source /etc/profile.d/jdk.sh
   args:
     executable: /bin/bash
-  when: java|changed or java_env|changed
+# when: java_install|changed or java_env|changed
