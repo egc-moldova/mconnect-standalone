@@ -7,23 +7,23 @@
 
 - name: Stop any resident services
   shell: ps -ef | grep -iv grep | grep {{ WSO2Owner }} | awk '{ print $2 }' | sudo xargs kill -9
-  ignore_errors: true
+  ignore_errors: yes
     
 - name: Remove product folder
   file: path={{ WSO2VersionHome }} state=absent force=yes
-  ignore_errors: true
+  ignore_errors: yes
     
 - name: Remove symlink
   file: path={{ WSO2CarbonHome }} state=absent force=yes
-  ignore_errors: true
+  ignore_errors: yes
 
 - name: Disable service automatic startup
   service: name={{ WSO2Service }} enabled=no
-  ignore_errors: true
+  ignore_errors: yes
     
 - name: Remove startup service
   file: path=/etc/init.d/{{ WSO2Service }} state=absent force=yes
-  ignore_errors: true
+  ignore_errors: yes
   
 # Create user
 
