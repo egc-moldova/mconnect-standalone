@@ -14,13 +14,14 @@
 
 - name: Install Java 8
   apt: name=oracle-java8-installer state=latest install_recommends=yes update_cache=yes
+  register: java
       
 - name: Set Java 8 environment
   apt: name=oracle-java8-set-default state=latest install_recommends=yes
-  register: jdk_env
+  register: java_env
 
 - name: Source JAVA_HOME
   shell: source /etc/profile.d/jdk.sh
   args:
     executable: /bin/bash
-  when: jdk_env|changed
+  when: java|changed or java_env|changed
