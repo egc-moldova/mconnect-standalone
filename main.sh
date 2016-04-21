@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # install ansible
 
 apt-get -y install software-properties-common -y
