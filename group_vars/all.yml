@@ -3,9 +3,6 @@
 # MConnect - Centrul de Guvernare Electronica #
 #---------------------------------------------#
 
-Offset: 0
-HostName: "{{ ansible_eth0['ipv4']['address'] }}"
-
 WSO2Owner: "wso2"
 WSO2Group: "wso2"
 WSO2CarbonTarget: "/usr/lib/"
@@ -16,6 +13,10 @@ WSO2ProductHome: "{{ WSO2Folder }}{{ WSO2ProductAlias }}/"
 WSO2CarbonHome: "{{ WSO2ProductHome }}wso2{{ WSO2ProductAlias }}"
 WSO2VersionHome: "{{ WSO2ProductHome }}/wso2{{ WSO2ProductAlias }}-{{ WSO2ProductVersion }}"
 WSO2Service: "wso2{{ WSO2ProductAlias }}"
+
+WSO2PortOffset: 0
+HostIP: "{{ ansible_eth0['ipv4']['address'] }}"
+HostName: "{{ HostIP }}"
 
 KeyStorePassword: "wso2carbon"
 KeyStoreKeyAlias: "wso2carbon"

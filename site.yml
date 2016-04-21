@@ -3,5 +3,5 @@
 # MConnect - Centrul de Guvernare Electronica #
 #--------------------------------------------
 
+- include: certs.yml
 - include: install.yml
-- include: keystore.yml
