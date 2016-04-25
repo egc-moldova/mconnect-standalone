@@ -1,11 +1,22 @@
 # mconnect-standalone
 
-## install git and clone repository
+## clone git repository and run all scripts
 
 ``` bash
-apt-get install git -y
+apt-get -y install ansible
 git clone --depth=1 https://github.com/egc-moldova/mconnect-standalone
 cd mconnect-standalone
-chmod a+x main.sh
-./main.sh
+ansible-playbook -i inventory site.yml
+```
+
+## just generate certificates
+
+``` bash
+ansible-playbook -i inventory certs.yml
+```
+
+## just install software
+
+``` bash
+ansible-playbook -i inventory install.yml
 ```
