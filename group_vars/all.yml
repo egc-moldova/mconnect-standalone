@@ -15,7 +15,7 @@ WSO2VersionHome: "{{ WSO2ProductHome }}/wso2{{ WSO2ProductAlias }}-{{ WSO2Produc
 WSO2Service: "wso2{{ WSO2ProductAlias }}"
 
 WSO2PortOffset: 0
-HostIP: "{{ ansible_eth0['ipv4']['address'] }}"
+HostIP: "{{ ansible_default_ipv4['address'] }}"
 HostName: "{{ HostIP }}"
 
 KeyStorePassword: "wso2carbon"

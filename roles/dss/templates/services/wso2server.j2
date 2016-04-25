@@ -1,52 +1,40 @@
 #!/bin/bash
-# --------------------------------------------------------------
-#
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
-#
-# --------------------------------------------------------------
-# This service script will be executed to start the servers.
-# --------------------------------------------------------------
-#
-USER="{{ WSO2Owner }}"				#eg: wso2
-PRODUCT_CODE="{{ WSO2ProductCode }}"            #eg: DSS
-CARBON_HOME="{{ WSO2CarbonHome }}"              #eg: /usr/lib/wso2server/dss/wso2dss
+### BEGIN INIT INFO
+# Provides:          wso2{{ WSO2ProductAlias }}
+# Required-Start:    $local_fs $syslog $network $named
+# Required-Stop:     $local_fs $syslog $network $named
+# Default-Start:     3 4 5
+# Default-Stop:      0 1 2 6
+# Short-Description: Start wso2{{ WSO2ProductAlias }} at startup
+# Description: wso2{{ WSO2ProductAlias }} daemon script
+### END INIT INFO
+USER="{{ WSO2Owner }}"
+PRODUCT_CODE="{{ WSO2ProductCode }}"
+CARBON_HOME="{{ WSO2CarbonHome }}"
 LOCK_FILE="${CARBON_HOME}/wso2carbon.lck"
 PID_FILE="${CARBON_HOME}/wso2carbon.pid"
 CMD="${CARBON_HOME}/bin/wso2server.sh"
 
 export JAVA_HOME=$JAVA_HOME
 
+. /lib/lsb/init-functions
+
 # Status the service
 status() {
  if [ -f $PID_FILE ]
-     then
-  PID=`cat $PID_FILE`
-  ps -fp $PID > /dev/null 2>&1
-  PIDVAL=$?
-     else
-  PIDVAL=3
+ then
+    PID=`cat $PID_FILE`
+    ps -fp $PID > /dev/null 2>&1
+    PIDVAL=$?
+ else
+    PIDVAL=3
  fi
 
  if [ $PIDVAL -eq 0 ]
-     then
-  echo "WSO2 $PRODUCT_CODE server is running ..."
-     else
-  echo "WSO2 $PRODUCT_CODE server is stopped."
+ then
+    log_success_msg "WSO2 $PRODUCT_CODE server is running ..."
+ else
+    log_warning_msg "WSO2 $PRODUCT_CODE server is stopped."
  fi
  return $PIDVAL
 }
@@ -54,100 +42,87 @@ status() {
 # Start the service
 start() {
  if [ -f $PID_FILE ]
-     then
-  PID=`cat $PID_FILE`
-  ps -fp $PID > /dev/null 2>&1
-  PIDVAL=$?
-     else
-  PIDVAL=3
+ then
+    PID=`cat $PID_FILE`
+    ps -fp $PID > /dev/null 2>&1
+    PIDVAL=$?
+ else
+    PIDVAL=3
  fi
 
  if [ $PIDVAL -eq 0 ]
-     then
-        echo "WSO2 $PRODUCT_CODE server is running ..."
-     else
-        echo -n "Starting WSO2 $PRODUCT_CODE server: "
-        touch $LOCK_FILE
-        su - $USER -c "$CMD start > /dev/null 2>&1 &"
-        sleep 5
-        if [ -f $PID_FILE ]
-     then
-   PID=`cat $PID_FILE`
-   ps -fp $PID > /dev/null 2>&1
-   PIDVAL=$?
-   if [ $PIDVAL -eq 0 ]
-       then
-    echo "success"
-       else
-    echo "failure"
-   fi
-     else
-   echo "failure"
-   PIDVAL=2
-        fi
+ then
+    log_success_msg "WSO2 $PRODUCT_CODE server is running ..."
+ else
+    log_begin_msg "Starting WSO2 $PRODUCT_CODE server"
+    touch $LOCK_FILE
+    su - $USER -c "$CMD start > /dev/null 2>&1 &"
+    sleep 5
+    if [ -f $PID_FILE ]
+    then
+       PID=`cat $PID_FILE`
+       ps -fp $PID > /dev/null 2>&1
+       PIDVAL=$?
+       log_end_msg $PIDVAL
+    else
+       log_end_msg 1
+       PIDVAL=2
+    fi
  fi
- echo
  return $PIDVAL
 }
 
 # Restart the service
 restart() {
- echo -n "Restarting WSO2 $PRODUCT_CODE server: "
+ log_begin_msg "Restarting WSO2 $PRODUCT_CODE server"
  touch $LOCK_FILE
  su - $USER -c "$CMD restart > /dev/null 2>&1 &"
  sleep 15
  if [ -f $PID_FILE ]
-     then
-  PID=`cat $PID_FILE`
-  ps -fp $PID > /dev/null 2>&1
-  PIDVAL=$?
-  if [ $PIDVAL -eq 0 ]
-      then
-   echo "success"
-      else
-   echo "failure"
-  fi
-     else
-  echo "failure"
-  PIDVAL=2
+ then
+    PID=`cat $PID_FILE`
+    ps -fp $PID > /dev/null 2>&1
+    PIDVAL=$?
+    log_end_msg $PIDVAL
+ else
+    log_end_msg 1
+    PIDVAL=2
  fi
- echo
  return $PIDVAL
 }
 
 # Stop the service
 stop() {
  if [ -f $PID_FILE ]
-     then
-  PID=`cat $PID_FILE`
-  ps -fp $PID > /dev/null 2>&1
-  PIDVAL=$?
-  if [ $PIDVAL -eq 0 ]
-      then
-   echo -n "Stopping WSO2 $PRODUCT_CODE server: "
-   su - $USER -c "$CMD stop > /dev/null 2>&1 &"
-   rm -f $LOCK_FILE
-   sleep 10
-   PID=`cat $PID_FILE`
-   ps -fp $PID > /dev/null 2>&1
-   PIDVAL=$?
-   if [ $PIDVAL -eq 0 ]
+ then
+    PID=`cat $PID_FILE`
+    ps -fp $PID > /dev/null 2>&1
+    PIDVAL=$?
+    if [ $PIDVAL -eq 0 ]
+    then
+       log_begin_msg "Stopping WSO2 $PRODUCT_CODE server"
+       su - $USER -c "$CMD stop > /dev/null 2>&1 &"
+       rm -f $LOCK_FILE
+       sleep 10
+       PID=`cat $PID_FILE`
+       ps -fp $PID > /dev/null 2>&1
+       PIDVAL=$?
+       if [ $PIDVAL -eq 0 ]
        then
-    echo "failure"
-    PIDVAL=2
+          log_end_msg 1
+          PIDVAL=2
        else
-    echo "success"
+          log_end_msg 0
+          PIDVAL=0
+       fi
+    else
+       log_warning_msg "WSO2 $PRODUCT_CODE server is not running."
+       PIDVAL=0
+    fi
+ else
+    log_warning_msg "WSO2 $PRODUCT_CODE server is not running."
     PIDVAL=0
-   fi
-      else
-         echo "WSO2 $PRODUCT_CODE server is not running."
-         PIDVAL=0
-  fi
-     else
-        echo "WSO2 $PRODUCT_CODE server is not running."
-        PIDVAL=0
  fi
- echo
  return $PIDVAL
 }
 
@@ -162,11 +137,11 @@ stop)
 status)
     status
     ;;
-restart|reload|condrestart)
+restart|reload|force-reload)
     restart
     ;;
 *)
-   echo $"Usage: $0 {start|stop|restart|reload|status}"
+   echo $"Usage: $0 {start|stop|restart|status}"
    exit 1
 esac
 exit $?
