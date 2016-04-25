@@ -6,22 +6,21 @@
 # Clean previous installation, if any
 
 - name: Stop any resident services
-  shell: ps -ef | grep -iv grep | grep {{ WSO2Owner }} | awk '{ print $2 }' | sudo xargs kill -9
+  shell: pkill --euid {{ WSO2Owner }} --signal SIGKILL
   ignore_errors: yes
-    
+
 - name: Remove product folder
   file: path={{ WSO2VersionHome }} state=absent force=yes
   ignore_errors: yes
-    
+
 - name: Remove symlink
   file: path={{ WSO2CarbonHome }} state=absent force=yes
   ignore_errors: yes
 
-# TODO: This fails when no service is present
-#- name: Disable service automatic startup
-#  service: name={{ WSO2Service }} enabled=no
-#  ignore_errors: yes
-    
+- name: Disable service automatic startup
+  service: name={{ WSO2Service }} enabled=no
+  ignore_errors: yes
+
 - name: Remove startup service
   file: path=/etc/init.d/{{ WSO2Service }} state=absent force=yes
   ignore_errors: yes
@@ -89,14 +88,12 @@
   service: name={{ WSO2Service }} state=started
   environment:
     JAVA_OPTS: "-Dsetup"
-#  command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/ && bin/wso2server.sh --start -Dsetup'"
     
 - name: Wait for WSO2 to start for the first time
   wait_for: path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex=org.wso2.carbon.ui.internal.CarbonUIServiceComponent
     
 - name: Stop WSO2 setup
   service: name={{ WSO2Service }} state=stopped
-#  command: bash -lc "su --preserve-environment {{ WSO2Owner }} -c 'cd {{ WSO2CarbonHome }}/ && bin/wso2server.sh --stop'"
     
 - name: Wait for WSO2 setup to completely stop
   wait_for: path={{ WSO2CarbonHome }}/repository/logs/wso2carbon.log search_regex=Halting
