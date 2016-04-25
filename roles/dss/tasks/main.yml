@@ -38,12 +38,6 @@
     
 - name: Create symbolic link
   file: src={{ WSO2VersionHome }} dest={{ WSO2CarbonHome }} owner={{ WSO2Owner }} group={{ WSO2Group }} state=link force=yes
-   
-- name: Create startup service
-  template: src=services/wso2server.j2 dest=/etc/init.d/{{ WSO2Service }} owner=root group=root mode=0755
-    
-- name: Ensure service is enabled for startup
-  service: name={{ WSO2Service }} enabled=yes
   
 - name: Copy Oracle Server OJDBC driver
   copy: src=ojdbc7.jar dest={{ WSO2CarbonHome }}/repository/components/lib/  owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
@@ -58,6 +52,9 @@
   when: driver is undefined or driver == 'mssql'
 
 # Configure product
+
+- name: Configure start script
+  template: src=bin/wso2server.sh.j2 dest={{ WSO2CarbonHome }}/bin/wso2server.sh owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
 
 - name: Configure carbon
   template: src=conf/carbon.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/carbon.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
@@ -81,6 +78,14 @@
 
 - name: Change WSO2 installation directory ownership
   file: path={{ WSO2Folder }} owner={{ WSO2Owner }} group={{ WSO2Group }} recurse=yes
+
+# Configure for startup
+
+- name: Create startup service
+  template: src=etc/init.d/wso2server.j2 dest=/etc/init.d/{{ WSO2Service }} owner=root group=root mode=0755
+    
+- name: Ensure service is enabled for startup
+  service: name={{ WSO2Service }} enabled=yes
 
 # Run product for setup
 
