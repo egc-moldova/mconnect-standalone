@@ -68,9 +68,6 @@
 - name: Configure tomcat catalina server
   template: src=conf/tomcat/catalina-server.xml.j2 dest={{ WSO2CarbonHome }}/repository/conf/tomcat/catalina-server.xml owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
 
-- name: Configure logging
-  template: src=conf/log4j.properties.j2 dest={{ WSO2CarbonHome }}/repository/conf/log4j.properties owner={{ WSO2Owner }} group={{ WSO2Group }} mode=0755
-
 # Install product patches
  
 - include: ../../common/tasks/patch.yml
