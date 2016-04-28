@@ -28,8 +28,8 @@
 # Configure system
 
 - name: Set hostname
-  lineinfile: dest=/etc/hosts regexp='^{{ HostIP }}' line='{{ HostIP }}		{{ HostName }}'
-  when: {{ HostIP }} != {{ HostName }}
+  lineinfile: dest=/etc/hosts regexp="^{{ HostIP }}" line="{{ HostIP }}		{{ HostName }}"
+  when: "{{ HostIP }}" != "{{ HostName }}"
 
 # Install product
 
