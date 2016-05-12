@@ -5,8 +5,7 @@
 
 WSO2Owner: "wso2"
 WSO2Group: "wso2"
-WSO2CarbonTarget: "/usr/lib/"
-WSO2Folder: "{{ WSO2CarbonTarget }}wso2server/"
+WSO2Folder: "/opt/wso2/"
 WSO2FileRepository: "{{ WSO2Folder }}files/"
 
 WSO2ProductHome: "{{ WSO2Folder }}{{ WSO2ProductAlias }}/"
